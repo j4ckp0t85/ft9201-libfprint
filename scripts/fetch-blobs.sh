@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Fetch the two proprietary FocalTech pieces this driver needs, from existing
-# public sources. Nothing proprietary is committed to this repo.
+# Optional: re-fetch the two proprietary FocalTech pieces this driver needs, from
+# existing public sources. This fork already tracks copies in blobs/ and
+# src/ft9201_fw.h, so running this is only needed to refresh them.
 #
 #   1. ftWbioEngineAdapter.dll  — the matcher, from FocalTech's signed Windows
 #      driver on the Microsoft Update Catalog.
