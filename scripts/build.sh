@@ -1,21 +1,16 @@
 #!/usr/bin/env bash
-# Build libfprint with the FT9201 driver grafted in. We do NOT fork libfprint:
-# this clones a pinned upstream release, drops our driver files into it, adds one
-# line to its build config, and compiles. The repo only holds our driver.
+# Build the libfprint tree tracked in this repo with the FT9201 driver.
+# src/ is the source of truth: the driver files are copied into libfprint/ and
+# the driver is registered in its meson config before compiling.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-LIBFPRINT_REF="${LIBFPRINT_REF:-v1.94.10}"   # pinned, tested upstream release
 LFP=libfprint
 
-[ -f src/ft9201_fw.h ] || { echo "!! run scripts/fetch-blobs.sh first (missing firmware)"; exit 1; }
-[ -f blobs/ftWbioEngineAdapter.dll ] || { echo "!! run scripts/fetch-blobs.sh first (missing DLL)"; exit 1; }
+[ -f src/ft9201_fw.h ] || { echo "!! missing src/ft9201_fw.h"; exit 1; }
+[ -f blobs/ftWbioEngineAdapter.dll ] || { echo "!! missing blobs/ftWbioEngineAdapter.dll"; exit 1; }
 
-if [ ! -d "$LFP" ]; then
-  echo "==> cloning upstream libfprint @ $LIBFPRINT_REF"
-  git clone --depth 1 --branch "$LIBFPRINT_REF" \
-      https://gitlab.freedesktop.org/libfprint/libfprint.git "$LFP"
-fi
+[ -d "$LFP" ] || { echo "!! missing $LFP/ tree"; exit 1; }
 
 echo "==> installing driver files into the tree"
 cp src/ft9201.c src/ft_engine.c src/ft_engine.h src/ft9201_fw.h "$LFP/libfprint/drivers/"

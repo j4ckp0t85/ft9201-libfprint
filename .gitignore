@@ -2,3 +2,4 @@
 /libfprint/build/
 # misc
 *.o
+test-storage.variant

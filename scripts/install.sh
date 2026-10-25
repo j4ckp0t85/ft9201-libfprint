@@ -22,7 +22,7 @@ fi
 [ "$(id -u)" = 0 ] || { echo "run with sudo"; exit 1; }
 SO=libfprint/build/libfprint/libfprint-2.so.2.0.0
 [ -f "$SO" ] || { echo "!! build first: scripts/build.sh"; exit 1; }
-[ -f blobs/ftWbioEngineAdapter.dll ] || { echo "!! run scripts/fetch-blobs.sh first"; exit 1; }
+[ -f blobs/ftWbioEngineAdapter.dll ] || { echo "!! missing blobs/ftWbioEngineAdapter.dll"; exit 1; }
 
 echo "==> installing libfprint (with FT9201) to $DEST"
 install -d "$DEST"

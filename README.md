@@ -75,10 +75,9 @@ libpixman-1-dev libgudev-1.0-dev libsystemd-dev`, plus `cabextract`.)
 ## Build & install
 
 ```
-git clone https://github.com/OMGrant/ft9201-libfprint
+git clone -b custom https://github.com/j4ckp0t85/ft9201-libfprint
 cd ft9201-libfprint
-scripts/fetch-blobs.sh     # optional in this fork: blobs/ is already tracked (see note below)
-scripts/build.sh           # clone pinned libfprint, graft the driver in, build
+scripts/build.sh           # copy the driver into the tracked libfprint/ tree and build
 ```
 
 Try it without installing anything:
