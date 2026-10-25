@@ -34,7 +34,12 @@ Developed and tested against
 the FT9348W variant of `2808:93a9`.
 
 Caveats:
-- Tested only on that FT9348W variant of the `2808:93a9` device.
+- Tested on the FT9348W variant of the `2808:93a9` device, and (in this fork)
+  on a second unit of the same USB ID where enroll and verify also work. That
+  unit reports sensor variant 0 and finger-present status `0x01` instead of
+  `0xa0`: the AFE power-on sequence now also runs for variant 0, and
+  `wait_finger_cb`/`wait_lift_cb` accept `0x01`. `wait_finger_cb` also logs
+  register 0x1d changes via `fp_dbg` (run with `G_MESSAGES_DEBUG=all`).
 - The matcher is a proprietary blob we call into; we can't fix bugs inside it.
 - x86-64 only (the DLL and loader are 64-bit).
 
