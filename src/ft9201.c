@@ -541,25 +541,25 @@ init_ssm_run_state (FpiSsm *ssm, FpDevice *dev)
 
     /* ---- variant 2/3 AFE power-on ---- */
     case INIT_POWER_CFG1:
-      if (self->sensor_variant == 2 || self->sensor_variant == 3)
+      if (self->sensor_variant == 0 || self->sensor_variant == 2 || self->sensor_variant == 3)
         ctrl_out (ssm, dev, REQ_AFE_WRITE, 0x00, REG_VARIANT_CFG1);
       else
         fpi_ssm_next_state (ssm);
       break;
     case INIT_POWER_CFG2:
-      if (self->sensor_variant == 2 || self->sensor_variant == 3)
+      if (self->sensor_variant == 0 || self->sensor_variant == 2 || self->sensor_variant == 3)
         ctrl_out (ssm, dev, REQ_AFE_WRITE, 0x0e, REG_VARIANT_CFG2);
       else
         fpi_ssm_next_state (ssm);
       break;
     case INIT_POWER_1F:
-      if (self->sensor_variant == 2 || self->sensor_variant == 3)
+      if (self->sensor_variant == 0 || self->sensor_variant == 2 || self->sensor_variant == 3)
         ctrl_out (ssm, dev, REQ_AFE_WRITE, 0x01, REG_POWER_1F);
       else
         fpi_ssm_next_state (ssm);
       break;
     case INIT_POWER_1E:
-      if (self->sensor_variant == 2 || self->sensor_variant == 3)
+      if (self->sensor_variant == 0 || self->sensor_variant == 2 || self->sensor_variant == 3)
         ctrl_out (ssm, dev, REQ_AFE_WRITE, 0x01, REG_POWER_1E);
       else
         fpi_ssm_next_state (ssm);
@@ -627,7 +627,7 @@ wait_lift_cb (FpiUsbTransfer *t, FpDevice *dev, gpointer ud, GError *err)
 {
   if (err) { fpi_ssm_mark_failed (t->ssm, err); return; }
 
-  if (t->buffer[0] != 0xa0)
+  if (t->buffer[0] != 0xa0 && t->buffer[0] != 0x01)
     {
       /* Finger has left — scan cycle complete */
       fpi_ssm_mark_completed (t->ssm);
@@ -643,7 +643,7 @@ wait_finger_cb (FpiUsbTransfer *t, FpDevice *dev, gpointer ud, GError *err)
 {
   if (err) { fpi_ssm_mark_failed (t->ssm, err); return; }
 
-  if (t->buffer[0] == 0xa0)
+  { static guint8 last = 0x55; if (t->buffer[0] != last) { last = t->buffer[0]; fp_dbg ("ft9201: reg1d=%02x %02x %02x %02x", t->buffer[0], t->buffer[1], t->buffer[2], t->buffer[3]); } } if (t->buffer[0] == 0xa0 || t->buffer[0] == 0x01)
     {
       /* Finger detected — proceed to arm and capture */
       fpi_ssm_next_state (t->ssm);
