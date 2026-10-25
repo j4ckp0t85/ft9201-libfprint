@@ -72,7 +72,7 @@ libpixman-1-dev libgudev-1.0-dev libsystemd-dev`, plus `cabextract`.)
 ```
 git clone https://github.com/OMGrant/ft9201-libfprint
 cd ft9201-libfprint
-scripts/fetch-blobs.sh     # pull the vendor DLL + MCU firmware (see note below)
+scripts/fetch-blobs.sh     # optional in this fork: blobs/ is already tracked (see note below)
 scripts/build.sh           # clone pinned libfprint, graft the driver in, build
 ```
 
@@ -96,8 +96,11 @@ Undo everything: `sudo scripts/install.sh --uninstall`.
 
 ## The proprietary blobs
 
-This repo contains **no** proprietary binaries. Two files are FocalTech's and are
-fetched from existing public sources at build time by `scripts/fetch-blobs.sh`:
+**This fork tracks the FocalTech binaries in `blobs/`** (DLLs, `.cab`, the
+`ft9201-static` `.deb`) and the extracted firmware `src/ft9201_fw.h`, so no
+fetch step is required. They remain FocalTech's property. Upstream fetched them
+at build time with `scripts/fetch-blobs.sh`, which still works if you want
+fresh copies:
 
 | File | What it is | Where it comes from |
 |------|------------|---------------------|
@@ -106,7 +109,7 @@ fetched from existing public sources at build time by `scripts/fetch-blobs.sh`:
 
 ### Sourcing the blobs by hand
 
-If either download URL has moved, you only need those two files:
+If you'd rather not use the bundled copies, or a download URL has moved, you only need those two files:
 
 - **`ftWbioEngineAdapter.dll`** — search the Microsoft Update Catalog for
   *"FocalTech Electronics Biometric"* (driver 1.0.3.58, matches hardware ID
@@ -188,6 +191,7 @@ CS9711, not this FocalTech part.)
 ## License
 
 The driver and loader (`src/`, `scripts/`) are **LGPL-2.1-or-later**, matching
-libfprint. The FocalTech DLL and firmware are their own property and are not
-distributed here — you fetch them yourself. This project is an interoperability
+libfprint. The FocalTech DLL and firmware are their own property; this fork
+bundles them in `blobs/` and `src/ft9201_fw.h` for convenience, without
+relicensing them. This project is an interoperability
 tool for hardware you own; it does not include or relicense any FocalTech code.
